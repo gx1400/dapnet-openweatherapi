@@ -1,0 +1,12 @@
+{
+    "url": "https://api.openweathermap.org/data/3.0/onecall",
+    "appid": "apikeyhere",
+    "lat": "41.99",
+    "lon": "-92.67",
+    "units": "imperial",
+    "lang": "en",
+    "exclude": [
+        "minutely",
+        "hourly"
+    ]
+}

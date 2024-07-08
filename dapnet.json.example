@@ -1,0 +1,12 @@
+{
+    "url": "http://www.hampager.de:8080/calls",
+    "loginuser" : "<dapnetusername>",
+    "loginpass" : "<dapnetpassword>",
+    "callSignNames": [
+        "<callsign>"
+    ],
+    "transmitterGroupNames": [
+        "us-ks"
+    ],
+    "emergency": false
+}
