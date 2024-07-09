@@ -3,6 +3,7 @@
 # pylint: disable=missing-function-docstring
 
 import json
+from time import strftime, localtime
 import requests
 
 DAPNET_FILENAME = 'dapnet.json'
@@ -52,17 +53,41 @@ def owa_getweather(s_owapi):
     #print(response.text)
     if response.status_code != 200:
         raise requests.ConnectionError("ERROR: failed to GET from openweatherapi")
-    
+
     results = json.loads(response.text)
-    print(json.dumps(results, indent=2))
+    #print(json.dumps(results, indent=2))
+    return results
+
+def owa_buildmsg(weather):
+    dt = strftime('%m/%d %I:%M%p', localtime(weather['current']['dt'])).replace(' 0', ' ')
+    summary = weather['daily'][0]['summary']
+    temp = weather['current']['temp']
+    #tempfeel = weather['current']['feels_like']
+    humidity = weather['current']['humidity']
+    #condition = weather['current']['weather'][0]['description']
+    forecastHigh = weather['daily'][0]['temp']['max']
+    forecastLow = weather['daily'][0]['temp']['min']
+    #forecastTemp = weather['daily'][0]['temp']['day']
+    forecastCondition = weather['daily'][0]['weather'][0]['description']
+    forecastRain = weather['daily'][0]['rain']
     
+    
+    msg = (
+        f'{dt} Curr: {temp:0.1f}°F Hum: {humidity:0.0f}%. '
+        f'Hi: {forecastHigh:0.1f}°F Lo: {forecastLow:0.1f}°F '
+        f'Forecast: {forecastCondition}'
+    )
+    return msg
 
 
 def main():
     try:
         s_owapi = read_json(OPENWEATHERAPI_FILENAME)
         s_dapnet = read_json(DAPNET_FILENAME)
-        owa_getweather(s_owapi)
+        weather = owa_getweather(s_owapi)
+        msg = owa_buildmsg(weather)
+        print(msg)
+        print(f"Length: {len(msg)}")
         #send_dapnet_msg(s_dapnet, 'test msg 7')
     except Exception as e: #pylint: disable=broad-exception-caught
         print(e)
